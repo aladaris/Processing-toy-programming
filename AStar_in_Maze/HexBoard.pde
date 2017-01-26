@@ -1,43 +1,53 @@
 class HexBoard extends Board {
-  HexAStarNode _cells[];
+  HexAStarNode _cells[][];
+  int _cellCount;
 
   HexBoard(final int xCount, final int yCount, final int cellWidth) {
     super(xCount, yCount);
-    _cells = new HexAStarNode[xCount * yCount];
+    _cells = new HexAStarNode[xCount][yCount];
+    _cellCount = xCount * yCount;
     
     for (int i = 0; i < xCount; i++) {
       for (int j = 0; j < yCount; j++) {
-        _cells[i + (j * _width)] = new HexAStarNode(i, j, cellWidth, false);
+        _cells[i][j] = new HexAStarNode(i, j, cellWidth, false);
       }
-      
     }
     
-    for (int i = 0; i < _cells.length; i++){
-      _cells[i].addNeighbours(this);
+    for (int y = 0; y < _height; y++) {
+      for (int x = 0; x < _width/2; x++) {
+        getCell(x, y).addNeighbours(this);
+      }
     }
-    
-  }
 
-  HexAStarNode getCell(final int idx) {
-    if (idx < _cells.length){
-      return _cells[idx];
-    }
-    return null;
+    
   }
   
   HexAStarNode getCell (final int x, final int y){
     if ((x >= 0 && y >= 0)&&(x < _width && y < _height)){
-      //return _cells[x + (y * _width)];
-      return _cells[x + (y * _width)];
+      
+      if (y % 2 == 0){
+        if (x * 2 < _width) {
+          return _cells[x * 2][y];
+        }
+      } else {
+        if (x * 2 + 1 < _width) {
+          if (y - 1 >= 0){
+            return _cells[x * 2 + 1][y - 1];
+          } else {
+            return _cells[x * 2 + 1][y];
+          }
+        }
+      }
+      
     }
     return null;
   }
 
-  int getCellCount() { return _cells.length; }
+  int getCellCount() { return _cellCount; }
 
   void show() {
       if (_cells.length > 0){
-        final int cellWidth = _cells[0]._cellWidth;
+        final int cellWidth = _cells[0][0]._cellWidth;
 
         boolean evenCol = true;
         float deltaX = cellWidth * 3;
@@ -62,7 +72,7 @@ class HexBoard extends Board {
             translate(0, deltaY);
             displacementY += deltaY;
             
-            _cells[i + (j * _width)].show();
+            _cells[i][j].show();
           }
           translate(0, -displacementY);
           if (evenCol){

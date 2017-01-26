@@ -26,16 +26,24 @@ class HexAStarNode extends AStarNode {
   
   public void addNeighbours(final HexBoard board){
     if (board != null){
+      if (this.y % 2 == 0){
+        addEvenRowNeighbour(board);
+      } else {
+      }
       
+    }
+  }
+  
+  private void addEvenRowNeighbour(final HexBoard board){
       int x = this.x;
-      int y = this.y - 1;
+      int y = this.y - 2;
       HexAStarNode node = board.getCell(x, y);
       if (node != null){
         neighbours.add(node);  // TOP
       }
       
-      x = this.x + 1;
-      y = this.y;
+      x = this.x;
+      y = this.y - 1;
       node = board.getCell(x, y);
       if (node != null){
         neighbours.add(node);  // TR
@@ -68,7 +76,6 @@ class HexAStarNode extends AStarNode {
       if (node != null){
         neighbours.add(node);  // TL
       }
-    }
   }
   
   @Override
@@ -127,25 +134,28 @@ class HexAStarNode extends AStarNode {
   @Override
   public void removeWalls(ICell neighbour){
     if (neighbour instanceof HexAStarNode){
-      //HexAStarNode nbour = (HexAStarNode)neighbour;
-      if (this.x == neighbour.x && this.y - 1 == neighbour.y){  // TOP neighbour
-        this.walls[0] = false;
-        neighbour.walls[3] = false;
-      } else if (this.x + 1 == neighbour.x && this.y == neighbour.y){  // TR neighbour
-        this.walls[1] = false;
-        neighbour.walls[4] = false;
-      } else if (this.x + 1 == neighbour.x && this.y + 1 == neighbour.y){  // BR neighbour
-        this.walls[2] = false;
-        neighbour.walls[5] = false;
-      } else if (this.x == neighbour.x && this.y + 1 == neighbour.y){  // BOTTOM neighbour
-        this.walls[3] = false;
-        neighbour.walls[0] = false;
-      } else if (this.x - 1 == neighbour.x && this.y + 1 == neighbour.y){  // BL neighbour
-        this.walls[4] = false;
-        neighbour.walls[1] = false;
-      } else if (this.x - 1 == neighbour.x && this.y == neighbour.y){  // TL neighbour
-        this.walls[5] = false;
-        neighbour.walls[2] = false;
+
+      if (neighbour.y % 2 == 0){
+      } else {
+        if (this.x == neighbour.x && this.y - 2 == neighbour.y){  // TOP neighbour
+          this.walls[0] = false;
+          neighbour.walls[3] = false;
+        } else if (this.x + 1 == neighbour.x && this.y - 1 == neighbour.y){  // TR neighbour
+          this.walls[1] = false;
+          neighbour.walls[4] = false;
+        } else if (this.x + 1 == neighbour.x && this.y + 1 == neighbour.y){  // BR neighbour
+          this.walls[2] = false;
+          neighbour.walls[5] = false;
+        } else if (this.x == neighbour.x && this.y + 2 == neighbour.y){  // BOTTOM neighbour
+          this.walls[3] = false;
+          neighbour.walls[0] = false;
+        } else if (this.x == neighbour.x && this.y + 1 == neighbour.y){  // BL neighbour
+          this.walls[4] = false;
+          neighbour.walls[1] = false;
+        } else if (this.x == neighbour.x && this.y - 1 == neighbour.y){  // TL neighbour
+          this.walls[5] = false;
+          neighbour.walls[2] = false;
+        }
       }
     }
   }
