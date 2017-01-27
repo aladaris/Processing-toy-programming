@@ -114,7 +114,7 @@ class AStar<T extends HexAStarNode, B extends Board>{
   }
   
   private void sortOpenSet(){
-    Collections.sort(openSet, new Comparator<T>() { //<>//
+    Collections.sort(openSet, new Comparator<T>() {
         @Override
         public int compare(T n2, T n1) {
           return new Float(heuristic_euclidean(n2, end)).compareTo(heuristic_euclidean(n1, end));

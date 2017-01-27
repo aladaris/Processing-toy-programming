@@ -4,17 +4,17 @@ class HexBoard extends Board {
 
   HexBoard(final int xCount, final int yCount, final int cellWidth) {
     super(xCount, yCount);
-    _cells = new HexAStarNode[xCount][yCount];
-    _cellCount = xCount * yCount;
+    _cells = new HexAStarNode[_width][_height];
+    _cellCount = _width * _height;
     
-    for (int i = 0; i < xCount; i++) {
-      for (int j = 0; j < yCount; j++) {
-        _cells[i][j] = new HexAStarNode(i, j, cellWidth, false);
+    for (int i = 0; i < _width; i++) {
+      for (int j = 0; j < _height; j++) {
+        _cells[i][j] = new HexAStarNode(i, j, cellWidth);
       }
     }
     
     for (int y = 0; y < _height; y++) {
-      for (int x = 0; x < _width/2; x++) {
+      for (int x = 0; x < _width; x++) {
         getCell(x, y).addNeighbours(this);
       }
     }
@@ -22,30 +22,45 @@ class HexBoard extends Board {
     
   }
   
-  HexAStarNode getCell (final int x, final int y){
+  HexAStarNode getCell (final int x, final int y){   
     if ((x >= 0 && y >= 0)&&(x < _width && y < _height)){
-      
-      if (y % 2 == 0){
-        if (x * 2 < _width) {
-          return _cells[x * 2][y];
-        }
-      } else {
-        if (x * 2 + 1 < _width) {
-          if (y - 1 >= 0){
-            return _cells[x * 2 + 1][y - 1];
-          } else {
-            return _cells[x * 2 + 1][y];
-          }
-        }
-      }
-      
+      return _cells[x][y];
     }
+    
     return null;
   }
 
   int getCellCount() { return _cellCount; }
 
   void show() {
+    if (_cells.length > 0){
+      final int cellWidth = _cells[0][0]._cellWidth;
+      boolean evenRow = true;
+      
+      pushMatrix();
+      translate(-cellWidth * 2, cellWidth * 3);
+      for (int y = 0; y < _height; y++){
+        evenRow = (y % 2) == 0;
+        if (evenRow){
+          translate(0, -cellWidth*2);
+        } else {
+          translate(cellWidth * 1.5, -cellWidth);
+        }
+        for (int x = 0; x < _width; x++){
+          translate(cellWidth * 3, 0);
+          _cells[x][y].show();
+
+        }
+        if (evenRow){
+          translate(-(cellWidth * 3 * _width), cellWidth * 2);
+        } else {
+          translate(-((cellWidth * 3 * _width)+(cellWidth * 1.5)), cellWidth * 3);
+        }
+      }
+      popMatrix();
+      
+    }
+      /*
       if (_cells.length > 0){
         final int cellWidth = _cells[0][0]._cellWidth;
 
@@ -82,6 +97,7 @@ class HexBoard extends Board {
           evenCol = !evenCol;
         }
       }
+      */
   }
 
 }
