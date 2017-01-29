@@ -39,7 +39,12 @@ class HexAStarNode extends AStarNode {
 
     neighbours = new ArrayList<HexAStarNode>();
     cameFrom = null;
-    _pos = new PVector(x * (2 * _cellWidth), y * (2 * _cellWidth));
+
+    if (y % 2 == 0){
+      _pos = new PVector((_cellWidth*1.5) * x, (_cellWidth) * y/2);
+    } else {
+      _pos = new PVector(((_cellWidth*1.5) * x) + (_cellWidth), ((_cellWidth) * (y/2)) + (_cellWidth/2));
+    }
 
     
     walls = new boolean[6];  // 0.Top, 1.TR, 2.BR, 3.Bottom, 4.BL, 5.TL
@@ -49,6 +54,12 @@ class HexAStarNode extends AStarNode {
     // Disable redundant borders
     //walls[0] = y == 0 ? true : false;  // TOP
     //walls[6] = x == 0 ? true : false;  // LEFT
+  }
+  
+  public float getDistance(HexAStarNode node){
+    if (node != null)
+      return dist(this._pos.x, this._pos.y, node._pos.x, node._pos.y);
+    return MAX_FLOAT;
   }
   
   public void addNeighbours(final HexBoard board){
@@ -69,6 +80,15 @@ class HexAStarNode extends AStarNode {
     }
   }
   
+  public boolean allWalls(){
+      for (int i = 0; i < this.walls.length; i++){
+        if (this.walls[i] == false){
+          return false;
+        }
+      }
+      return true;
+  }
+  
   @Override
   public void show(){
     final int w = _cellWidth;
@@ -76,61 +96,56 @@ class HexAStarNode extends AStarNode {
 
     noStroke();
     fill(cellColor);
-    ellipse(0, 0, _cellWidth, _cellWidth);  // CENTER
-    strokeWeight(1);
-    //beginShape();
-    stroke(strokeColor);
     
-     if (!walls[0]){
-       line(- (w/2), -w, w/2, -w);
-     }
-     if (!walls[1]){
-       line(w/2, -w, w/2, -w);
-     }
-     if (!walls[2]){
-       line(w, 0, w/2, w);
-     }
-     if (!walls[3]){
-       line(w/2, w, -(w/2), w);
-     }
-     if (!walls[4]){
-       line(-(w/2), w, -w, 0);
-     }
-     if (!walls[5]){
-       line(-w, 0, -(w/2),  -w);
-     }
-    
-    /*
-    if (!walls[0]){ noStroke(); }
+    // Fill cell
+    noStroke();
+    beginShape();
     vertex(- (w/2), -w);
     vertex(w/2, -w);
     
-    stroke(strokeColor);
-    if (!walls[1]){ noStroke(); }
     vertex(w/2, -w);
     vertex(w, 0);
     
-    stroke(strokeColor);
-    if (!walls[2]){ noStroke(); }
     vertex(w, 0);
     vertex(w/2, w);
     
-    stroke(strokeColor);
-    if (!walls[3]){ noStroke(); }
     vertex(w/2, w);
     vertex(-(w/2), w);
     
-    stroke(strokeColor);
-    if (!walls[4]){ noStroke(); }
     vertex( -(w/2), w);
     vertex(-w, 0);
     
-    stroke(strokeColor);
-    if (!walls[5]){ noStroke(); }
     vertex( -w, 0);
     vertex(-(w/2),  -w);
     endShape();
-    */
+
+    // Draw walls
+    strokeWeight(1);
+    stroke(strokeColor);
+     if (walls[0]){
+       line(- (w/2), -w, w/2, -w);
+     }
+     if (walls[1]){
+       //line(w/2, -w, w/2, -w);
+     }
+     if (walls[2]){
+       //line(w, 0, w/2, w);
+     }
+     if (walls[3]){
+       line(w/2, w, -(w/2), w);
+     }
+     if (walls[4]){
+       line(-(w/2), w, -w, 0);
+     }
+     if (walls[5]){
+       line(-w, 0, -(w/2),  -w);
+     }
+     
+     // DEBUG
+     //textSize(8);
+     //fill(color(255,255,0));
+     //text(String.format("[%.0f, %.0f]", _pos.x, _pos.y), -w/2, 0);
+
   }
   
   @Override
@@ -148,33 +163,38 @@ class HexAStarNode extends AStarNode {
       if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){  // TOP neighbour
         this.walls[0] = false;
         neighbour.walls[3] = false;
+        return;
       }
       nPos = neighbourMap.get(NEIGHBOUR_POSITION.TOP_RIGHT);
       if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){  // TR neighbour
         this.walls[1] = false;
         neighbour.walls[4] = false;
+        return;
       }
       nPos = neighbourMap.get(NEIGHBOUR_POSITION.BOTTOM_RIGHT);
       if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){// BR neighbour
         this.walls[2] = false;
         neighbour.walls[5] = false;
+        return;
       }
       nPos = neighbourMap.get(NEIGHBOUR_POSITION.BOTTOM);
       if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){  // BOTTOM neighbour
         this.walls[3] = false;
         neighbour.walls[0] = false;
+        return;
       }
       nPos = neighbourMap.get(NEIGHBOUR_POSITION.BOTTOM_LEFT);
       if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){// BL neighbour
         this.walls[4] = false;
         neighbour.walls[1] = false;
+        return;
       }
       nPos = neighbourMap.get(NEIGHBOUR_POSITION.TOP_LEFT);
       if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){// TL neighbour
         this.walls[5] = false;
         neighbour.walls[2] = false;
+        return;
       }
-
     }
   }
 
@@ -189,42 +209,42 @@ class HexAStarNode extends AStarNode {
 
     PVector nPos = neighbourMap.get(NEIGHBOUR_POSITION.TOP);
     if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){  // TOP neighbour        
-      if ((this.walls[0] == false)&&(this.walls[0] == neighbour.walls[3])){
+      if (((!this.walls[0])&&(this.walls[0] == neighbour.walls[3]))){
         return false;
       }
     } 
  
     nPos = neighbourMap.get(NEIGHBOUR_POSITION.TOP_RIGHT);
     if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){// TR neighbour
-      if ((this.walls[1] == false)&&(this.walls[1] == neighbour.walls[4])){
+      if (((!this.walls[1])&&(this.walls[1] == neighbour.walls[4]))){
         return false;
       }
     } 
       
     nPos = neighbourMap.get(NEIGHBOUR_POSITION.BOTTOM_RIGHT);
     if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){// BR neighbour
-      if ((this.walls[2] == false)&&(this.walls[2] == neighbour.walls[5])){
+      if (((!this.walls[2])&&(this.walls[2] == neighbour.walls[5]))){
         return false;
       }
     } 
       
     nPos = neighbourMap.get(NEIGHBOUR_POSITION.BOTTOM);
     if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){// BOTTOM neighbour
-      if ((this.walls[3] == false)&&(this.walls[3] == neighbour.walls[0])){
+      if (((!this.walls[3])&&(this.walls[3] == neighbour.walls[0]))){
         return false;
       }
     } 
       
     nPos = neighbourMap.get(NEIGHBOUR_POSITION.BOTTOM_LEFT);
     if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){// BL neighbour
-      if ((this.walls[4] == false)&&(this.walls[4] == neighbour.walls[1])){
+      if (((!this.walls[4])&&(this.walls[4] == neighbour.walls[1]))){
         return false;
       }
-    } 
-      
+    }
+    
     nPos = neighbourMap.get(NEIGHBOUR_POSITION.TOP_LEFT);
     if (this.x + nPos.x == neighbour.x && this.y + nPos.y == neighbour.y){// TL neighbour
-      if ((this.walls[5] == false)&&(this.walls[5] == neighbour.walls[2])){
+      if (((!this.walls[5])&&(this.walls[5] == neighbour.walls[2]))){
         return false;
       }
     }

@@ -60,44 +60,6 @@ class HexBoard extends Board {
       popMatrix();
       
     }
-      /*
-      if (_cells.length > 0){
-        final int cellWidth = _cells[0][0]._cellWidth;
-
-        boolean evenCol = true;
-        float deltaX = cellWidth * 3;
-        float deltaY = cellWidth * 2;
-        float displacementY;
-        for (int i = 0; i < xCount; i++) {
-          
-          if (evenCol){
-            deltaX = cellWidth * 3;
-          } else {
-            translate(-cellWidth/2, cellWidth);
-            deltaX = cellWidth * 2;
-          }
-          
-          translate(deltaX, 0);
-          displacementY = 0;
-          for (int j = 0; j < yCount; j++) {
-            if (!evenCol){
-              
-            }
-            
-            translate(0, deltaY);
-            displacementY += deltaY;
-            
-            _cells[i][j].show();
-          }
-          translate(0, -displacementY);
-          if (evenCol){
-          } else {
-            translate(-(cellWidth + (cellWidth/2)), -cellWidth);
-          }
-          evenCol = !evenCol;
-        }
-      }
-      */
   }
 
 }

@@ -19,6 +19,7 @@ class AStar<T extends HexAStarNode, B extends Board>{
     this.start = start;
     this.current = null;
     this.end = end;
+    this.path = new ArrayList<T>();
     this.board = board;
     this.finished = false;
     

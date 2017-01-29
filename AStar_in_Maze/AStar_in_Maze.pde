@@ -2,9 +2,9 @@
 HexBoard b;
 AStar<HexAStarNode, HexBoard> aStar;
 
-int xCount = 77;
-int yCount = 148;
-int cellSize = 3;
+int xCount = 25;
+int yCount = 20;
+int cellSize = 5;
 
 void setup(){
   size(1393, 895);
@@ -19,40 +19,39 @@ void setup(){
         HexAStarNode node = b.getCell(i, j);
         if (node != null){
           for (ICell n : node.neighbours){
-            if (random(1.0) < 0.2){
+            if (random(1.0) < 0.45){
               node.removeWalls(n);
             }
           }
         }
       }
     }
-  
-  HexAStarNode initNode = b.getCell(2, 2);
-  // DEBUG
-  int inc = 0;
-  for (ICell n : initNode.neighbours){
-    n.cellColor = color(15+ inc, 150 + inc, 100 + inc);
-    inc += 25;
-  }
-
-  /*
-  for (int i = 0; i < xCount; i++){
-    HexAStarNode node = b.getCell(i, 1);
-    if (node != null){
-      node.cellColor = color(0,0,255);
+    
+    for (int i = 0; i < b._width; i++) {
+      for (int j = 0; j < b._height; j++) {
+        HexAStarNode node = b.getCell(i, j);
+        if (node.allWalls()){
+          node.cellColor = color(255);
+          println("ALL WALLS");  // DEBUG
+        }
+      }
     }
-  }
-  */
   
+  HexAStarNode initNode = b.getCell(0, 0);  
   aStar = new AStar(initNode, b.getCell((int)random(xCount-1), (int)random(yCount-1)), b);
   
 }
 
 void draw(){
   background(0);
-  if (!aStar.finished){
-    aStar.advanceStep();
-  }
   aStar.paintPath();
   b.show();
+  if (!aStar.finished){
+    aStar.advanceStep();
+  } else {
+    noLoop();
+  }
+  
+  final String txt_fps = String.format(getClass().getName()+ "   [fps %6.2f]", frameRate);
+  surface.setTitle(txt_fps);
 }
