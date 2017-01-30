@@ -3,9 +3,9 @@ import java.util.*;
 class AStarNode extends ICell {
   protected final int _cellWidth;
   
-  public double f_score = 0.0;
-  public double g_score = 0.0;
-  public double h_score = 0.0;
+  public float f_score = 0f;
+  public float g_score = 0f;
+  public float h_score = 0f;
   public List<AStarNode> neighbours;
   public AStarNode cameFrom;
 

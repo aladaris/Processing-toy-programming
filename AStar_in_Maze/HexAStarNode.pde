@@ -258,8 +258,8 @@ class HexAStarNode extends AStarNode {
   
   @Override
   public boolean equals(Object o){
-    if (o instanceof AStarNode){
-      AStarNode other = (AStarNode)o;
+    if (o instanceof HexAStarNode){
+      HexAStarNode other = (HexAStarNode)o;
       return this.x == other.x && this.y == other.y;
     }
     return false;

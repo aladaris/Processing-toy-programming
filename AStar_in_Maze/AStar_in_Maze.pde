@@ -2,12 +2,12 @@
 HexBoard b;
 AStar<HexAStarNode, HexBoard> aStar;
 
-int xCount = 25;
-int yCount = 20;
-int cellSize = 5;
+int xCount = 116/2;
+int yCount = 220/2;
+int cellSize = 4;
 
 void setup(){
-  size(1393, 895);
+  size(1396, 889);
   
   //b = new Board(xCount, yCount, 2);
   
@@ -19,7 +19,7 @@ void setup(){
         HexAStarNode node = b.getCell(i, j);
         if (node != null){
           for (ICell n : node.neighbours){
-            if (random(1.0) < 0.45){
+            if (random(1.0) < 0.27){
               node.removeWalls(n);
             }
           }
@@ -32,25 +32,25 @@ void setup(){
         HexAStarNode node = b.getCell(i, j);
         if (node.allWalls()){
           node.cellColor = color(255);
-          println("ALL WALLS");  // DEBUG
+          //println("ALL WALLS");  // DEBUG
         }
       }
     }
   
   HexAStarNode initNode = b.getCell(0, 0);  
   aStar = new AStar(initNode, b.getCell((int)random(xCount-1), (int)random(yCount-1)), b);
+  //aStar = new AStar(initNode, b.getCell(xCount-1, yCount-1), b);
   
 }
 
 void draw(){
   background(0);
-  aStar.paintPath();
-  b.show();
   if (!aStar.finished){
     aStar.advanceStep();
   } else {
     noLoop();
   }
+  b.show();
   
   final String txt_fps = String.format(getClass().getName()+ "   [fps %6.2f]", frameRate);
   surface.setTitle(txt_fps);

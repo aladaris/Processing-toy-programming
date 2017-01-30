@@ -1,7 +1,7 @@
 import java.util.*;
 
 class AStar<T extends HexAStarNode, B extends Board>{
-  List<T> openSet;  // TODO: Used a sortedList to avoid sorting on each insertion
+  TreeSet<T> openSet;  // TODO: Used a sortedList to avoid sorting on each insertion
   List<T> closedSet;
   T start;
   T current;
@@ -10,11 +10,23 @@ class AStar<T extends HexAStarNode, B extends Board>{
   B board;
   boolean finished;
   
+  final color CELL_COLOR_START  = color(255, 120, 255);
+  final color CELL_COLOR_END    = color(255, 120, 255);  
+  final color CELL_COLOR_OPEN   = color(10, 255, 10);
+  final color CELL_COLOR_CLOSED = color(255, 10, 10);
+  final color CELL_COLOR_PATH   = color(33, 55, 200);
+  
   public AStar(final T start, final T end, final B board) {
     
     // TODO: Keep openSet sorted by ¿f_score?
     
-    this.openSet = new ArrayList<T>();
+    this.openSet = new TreeSet<T>(new Comparator<T>(){
+      @Override
+      public int compare(T n2, T n1) {
+        return new Float(heuristic_euclidean(n2, end)).compareTo(heuristic_euclidean(n1, end));
+        //return new Float(n2.h_score).compareTo(n1.h_score);
+      }
+    });
     this.closedSet = new ArrayList<T>();
     this.start = start;
     this.current = null;
@@ -27,30 +39,30 @@ class AStar<T extends HexAStarNode, B extends Board>{
     this.end.cellColor = color(10, 10, 225);
     
     this.openSet.add(start);
-    sortOpenSet();
+    //sortOpenSet();
   }
 
   public void advanceStep(){
     if (!finished){
       if (openSet.size() > 0){
-        
-        if (path != null){
-          for (T node : path){
-            node.cellColor = color(255, 5, 5);
-          }
-        }
-        
-        current = openSet.get(0);
+
+        setPathColor(CELL_COLOR_CLOSED);
+
+        current = openSet.pollFirst();
         
         // Finished?
         if (current == end){
           println("A*: Done!");
           finished = true;
+          setPathColor(CELL_COLOR_PATH);
+          this.start.cellColor = CELL_COLOR_START;
+          this.end.cellColor = CELL_COLOR_END;
+          return;
         }
         
-        openSet.remove(current);
+        //openSet.remove(current);
         closedSet.add(current);
-        current.cellColor = color(254, 10, 255);
+        //current.cellColor = CELL_COLOR_CLOSED;
         
         // Check all the neighbors
         //for (T nbour : current.neighbours){
@@ -58,7 +70,7 @@ class AStar<T extends HexAStarNode, B extends Board>{
           T nbour = (T)current.neighbours.get(i);
           // Valid next node?
           if (!closedSet.contains(nbour) && !current.isWallBetweenCell(nbour)){
-            double temp_g_score = current.g_score + heuristic_euclidean(current, nbour);
+            float temp_g_score = current.g_score + heuristic_euclidean(current, nbour);
             
             // Is this a better path than before?
             boolean newPath = false;
@@ -71,8 +83,8 @@ class AStar<T extends HexAStarNode, B extends Board>{
               nbour.g_score = temp_g_score;
               newPath = true;
               openSet.add(nbour);
-              sortOpenSet();
-              nbour.cellColor = color(5, 255, 5);
+              //sortOpenSet();
+              nbour.cellColor = CELL_COLOR_OPEN;
             }
             
             // Yes, it's a better path
@@ -97,15 +109,15 @@ class AStar<T extends HexAStarNode, B extends Board>{
       while(tempNode.cameFrom != null){
         path.add((T)tempNode.cameFrom);
         tempNode = (T)tempNode.cameFrom;
+        tempNode.cellColor = CELL_COLOR_PATH;
       }
     }  // If not finishied
-
   }
   
-  public void paintPath(){
-    if (path.size() > 0){
+  public void setPathColor(final color c){
+    if (path != null){
       for (T node : path){
-        node.cellColor = color(254, 10, 255);
+        node.cellColor = c;
       }
     }
   }
@@ -113,14 +125,16 @@ class AStar<T extends HexAStarNode, B extends Board>{
   private float heuristic_euclidean(T n1, T n2){
     return n1.getDistance(n2);
   }
-  
+  /*
   private void sortOpenSet(){
     Collections.sort(openSet, new Comparator<T>() {
         @Override
         public int compare(T n2, T n1) {
-          return new Float(heuristic_euclidean(n2, end)).compareTo(heuristic_euclidean(n1, end));
+          //return new Float(heuristic_euclidean(n2, end)).compareTo(heuristic_euclidean(n1, end));
+          return new Float(n2.h_score).compareTo(n1.h_score);
         }
     });
   }
+  */
 
 }
