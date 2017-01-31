@@ -55,3 +55,7 @@ void draw(){
   final String txt_fps = String.format(getClass().getName()+ "   [fps %6.2f]", frameRate);
   surface.setTitle(txt_fps);
 }
+
+void mouseClicked() {
+    println("CLICK", mouseX, mouseY);
+}
