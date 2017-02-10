@@ -69,7 +69,7 @@ class Popullation{
     int candidatePos;
 
     while (parentsCount < rockets.length) {
-      candidatePos = (int)(random(1f) * rockets.length);
+      candidatePos = (int)(random(rockets.length));
       if (random(1f) < rockets[candidatePos].fitness) {
         parents.add(rockets[candidatePos]);
         parentsCount++;

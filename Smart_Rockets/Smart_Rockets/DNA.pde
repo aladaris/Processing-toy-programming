@@ -38,10 +38,10 @@ class DNA {
   
   public void mutate(){
     for (int i = 0; i < this.genes.length; i++){
-      if (random(1) < 0.001){
+      if (random(1) < 0.0025){
         this.genes[i] = PVector.random2D();
         this.genes[i].setMag(FORCE_MAGNITUDE);
-        println("Mutating", i);  // DEBUG
+        //println("Mutating", i);  // DEBUG
       }
     }
   }
@@ -49,10 +49,12 @@ class DNA {
   public DNA crossover(final DNA d2){
     if (this.genes.length == d2.genes.length){
       PVector[] childGenes = new PVector[this.genes.length];
+      /*
       for (int i = 0; i < childGenes.length; i++){
         childGenes[i] = random(1f) < 0.5f ? this.genes[i] : d2.genes[i];
       }
-      /*
+      */
+      
       int midPoint = (int)random(this.genes.length);
       for (int i = 0; i < childGenes.length; i++){
         if (i < midPoint){
@@ -61,7 +63,7 @@ class DNA {
           childGenes[i] = d2.genes[i];
         }
       }
-      */
+      
       return new DNA(childGenes);
     }
     return this;

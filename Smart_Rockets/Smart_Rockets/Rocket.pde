@@ -11,7 +11,7 @@ class Rocket{
   
   private final color ROCKET_COLOR = color(255, 100);
   private final int ROCKET_LENGTH = 35;
-  private final int ROCKET_WIDTH = 10;
+  private final int ROCKET_WIDTH = 1;
   private final float ROCKET_MIN_TARGET_DISTANCE = 10f;
   
   public Rocket(final PVector target_position, final DNA dna){
@@ -62,23 +62,35 @@ class Rocket{
     
     this.applyForce(dna.getNextGene());
     if (!this.completed && !this.crashed) {
-      this.vel.add(this.acc);
       this.pos.add(this.vel);
+      //this.pos.add(PVector.add(this.vel, PVector.mult(this.acc, 0.5f)));
+      this.vel.add(this.acc);
       this.acc.mult(0);
-      this.vel.limit(4);
+      this.vel.limit(6);
     }
     
   }
   
   public void show(){
-    pushMatrix();
-    noStroke();
-    fill(ROCKET_COLOR);
-    translate(this.pos.x, this.pos.y);
-    rotate(this.vel.heading());
-    rectMode(CENTER);
-    rect(0, 0, ROCKET_LENGTH, ROCKET_WIDTH);
-    popMatrix();
+    if (!crashed){  // Just for persistent trails
+      pushMatrix();
+      noStroke();
+      //fill(ROCKET_COLOR);
+      if (!finished){
+        fill(
+          1/map(dist(this.pos.x, this.pos.y, target.x, target.y), 0f, height, 0.0001f, 255),
+          80,
+          map(dist(this.pos.x, this.pos.y, target.x, target.y), 0f, height, 0.0001f, 255),
+          33);
+      } else {
+        fill(0);
+      }
+      translate(this.pos.x, this.pos.y);
+      rotate(this.vel.heading());
+      rectMode(CENTER);
+      rect(0, 0, ROCKET_LENGTH, ROCKET_WIDTH);
+      popMatrix();
+    }
   }
   
   public void calculateFitness() {
@@ -91,7 +103,7 @@ class Rocket{
     }
     //this.fitness = map(d, 0, width, width, 0);
     if (this.completed) {
-      this.fitness *= ((1 / this.completeStep) * 30);
+      this.fitness *= ((1 / this.completeStep) * 100);
     }
     if (this.crashed) {
       this.fitness /= 10;
