@@ -1,26 +1,14 @@
 final int size = 7500;
-//BubleHandler b = new BubleHandler(size);
-QuickHandler q = new QuickHandler(size);
 
-//import processing.video.*;
-//Capture cam;
+// SELECT A SORTING ALGORITHM
+//BubleHandler h = new BubleHandler(size);
+QuickHandler h = new QuickHandler(size);
 
 void setup(){
   size(1000, 900); 
   background(0);
   frameRate(600);
  
- /*
-  // Show cameras
-  
-  String[] cameras = Capture.list();
-  for (int i = 0; i < cameras.length; i++)
-    println("[" + i + "] " + cameras[i]);
-  
-  
-  cam = new Capture(this, Capture.list()[3]);  // [61] name=Logitech QuickCam S7500,size=640x400,fps=30
-  cam.start();
-*/  
 
   noStroke();
   rectMode(CENTER);
@@ -29,26 +17,21 @@ void setup(){
 }
 
 void draw(){
-  //runPaletteSingleImage("test5.jpg");
   
-  
-  
-  /*
-  if (cam.available()){
-    cam.read();
-    p.pixels(cam.foo);
-    p.run();
-  }
-  */
-  
-  
-  q.show(15, 500);
-  if (!q.step()){
+  // DRAW SORTING ALGORITHM
+  translate(5, 10);
+  h.show(75, 100);
+  if (!h.step()){
     println("Fin");
     noLoop();
   }
   //saveFrame("C:\\Temp\\Quicksort\\frame-#########.png");
-  
+
+
+  // SORT IMAGE PIXELS BY HUE AND SATURATION
+  /*
+  runPaletteSingleImage("test2.png"); // Available images: test1.png, test2.png, test3.jpg, test4.jpg, test5.jpg
+  */
 }
 
 void runPaletteSingleImage(String imgStr){
@@ -71,6 +54,8 @@ void runPaletteSingleImage(String imgStr){
   text("n", text_x, 110);
   text("▼", text_x-1, 125);
   text("HUE ►", text_x + 15, 10);
+  
+  image(img, width - 155, 5, 150, 150);
   
   noLoop();
 }

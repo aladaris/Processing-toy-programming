@@ -23,7 +23,7 @@ class Popullation{
   }
   
   public boolean hasFinished(){
-    return getCurrentStep() + 1 == STEPS_PER_GENERATION;
+    return getCurrentStep() + 1 == GLOBALS.STEPS_PER_GENERATION;
   }
   
   public void evaluate(){
@@ -40,7 +40,7 @@ class Popullation{
     // Normalize fitness values
     for (int i = 0; i < rockets.length; i++){
       rockets[i].fitness /= maxFit;
-      println("Fitness = ", rockets[i].fitness);  // DEBUG
+      //println("Fitness = ", rockets[i].fitness);  // DEBUG
     }
   }
   
@@ -56,7 +56,9 @@ class Popullation{
       }
       DNA parentGenomeB = parents[i].dna;
       DNA childGenome   = parentGenomeA.crossover(parentGenomeB);
-      childGenome.mutate();
+      if (random(1f) < GLOBALS.MUTATION_RATE){
+        childGenome.mutate();
+      }
       
       children.add(new Rocket(parents[i].target, childGenome));
     }

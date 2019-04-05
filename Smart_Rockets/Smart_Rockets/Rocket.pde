@@ -26,7 +26,7 @@ class Rocket{
     this.target = target_position;
     this.completed = false;
     this.crashed = false;
-    this.dna = new DNA(STEPS_PER_GENERATION);
+    this.dna = new DNA(GLOBALS.STEPS_PER_GENERATION);
     this.fitness = 0f;
     this.completeStep = -1;
   }
@@ -56,8 +56,10 @@ class Rocket{
     }
     
     // Obstacles
-    if (dist(this.pos.x, this.pos.y, OBSTACLE_1_POS.x, OBSTACLE_1_POS.y) < OBSTACLE_1_SIZE){
-      this.crashed = true;
+    for (Obstacle obs : obstacles){
+      if (dist(this.pos.x, this.pos.y, obs.pos.x, obs.pos.y) < obs.radius){
+        this.crashed = true;
+      }
     }
     
     this.applyForce(dna.getNextGene());
@@ -66,7 +68,7 @@ class Rocket{
       //this.pos.add(PVector.add(this.vel, PVector.mult(this.acc, 0.5f)));
       this.vel.add(this.acc);
       this.acc.mult(0);
-      this.vel.limit(6);
+      this.vel.limit(GLOBALS.VELOCITY_LIMIT);
     }
     
   }

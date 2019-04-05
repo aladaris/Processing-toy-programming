@@ -19,7 +19,7 @@ void setup(){
         HexAStarNode node = b.getCell(i, j);
         if (node != null){
           for (ICell n : node.neighbours){
-            if (random(1.0) < 0.27){
+            if (random(1.0) < 0.28){
               node.removeWalls(n);
             }
           }

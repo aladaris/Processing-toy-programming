@@ -11,7 +11,7 @@ class DNA {
     genes = new PVector[genome_length];
     for (int i = 0; i < genes.length; i++){
       genes[i] = PVector.random2D();
-      genes[i].setMag(FORCE_MAGNITUDE);
+      genes[i].setMag(GLOBALS.FORCE_MAGNITUDE);
     }
     seqPos = 0;
   }
@@ -40,7 +40,7 @@ class DNA {
     for (int i = 0; i < this.genes.length; i++){
       if (random(1) < 0.0025){
         this.genes[i] = PVector.random2D();
-        this.genes[i].setMag(FORCE_MAGNITUDE);
+        this.genes[i].setMag(GLOBALS.FORCE_MAGNITUDE);
         //println("Mutating", i);  // DEBUG
       }
     }
