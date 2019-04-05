@@ -1,4 +1,6 @@
-final int size = 7500;
+final int rows = 60;
+final int cols = 60;
+final int size = rows * cols;
 
 // SELECT A SORTING ALGORITHM
 //BubleHandler h = new BubleHandler(size);
@@ -19,8 +21,8 @@ void setup(){
 void draw(){
   
   // DRAW SORTING ALGORITHM
-  translate(5, 10);
-  h.show(75, 100);
+  translate(25, 10);
+  h.show(rows, cols);
   if (!h.step()){
     println("Fin");
     noLoop();
