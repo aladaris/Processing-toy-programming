@@ -26,7 +26,7 @@ void setup(){
   obstacles.add(new Obstacle(width / 1.93, height / 3.3, 30f));
   obstacles.add(new Obstacle(width / 1.55, height / 4.22, 90f));
   
-  GUI.setupGUI(this, 200, new PVector(20, 20));
+  //GUI.setupGUI(this, 200, new PVector(20, 20));
 }
 
 void draw(){
