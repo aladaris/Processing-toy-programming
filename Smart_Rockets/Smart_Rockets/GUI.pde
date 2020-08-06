@@ -102,7 +102,7 @@ public void start(int value){
   GLOBALS.PAUSED = !GLOBALS.PAUSED;
 }
 
-/*
+
 public void force_magnitude(float value){
   GLOBALS.FORCE_MAGNITUDE = value;
 }
@@ -118,4 +118,3 @@ public void popullation_size(int value){
 public void mutation_rate(float value){
   GLOBALS.MUTATION_RATE = value;
 }
-*/

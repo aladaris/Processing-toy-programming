@@ -57,7 +57,7 @@ class Rocket{
     
     // Obstacles
     for (Obstacle obs : obstacles){
-      if (dist(this.pos.x, this.pos.y, obs.pos.x, obs.pos.y) < obs.radius){
+      if (obs.isInside(this.pos)){
         this.crashed = true;
       }
     }
@@ -79,11 +79,18 @@ class Rocket{
       noStroke();
       //fill(ROCKET_COLOR);
       if (!finished){
+        /*
         fill(
           1/map(dist(this.pos.x, this.pos.y, target.x, target.y), 0f, height, 0.0001f, 255),
           80,
           map(dist(this.pos.x, this.pos.y, target.x, target.y), 0f, height, 0.0001f, 255),
           33);
+        */
+        fill(
+          map(dist(this.pos.x, this.pos.y, target.x, target.y), 0f, height, 0.0001f, GLOBALS.GEN_R),
+          map(dist(this.pos.x, this.pos.y, target.x, target.y), 0f, height, 0.0001f, GLOBALS.GEN_G),
+          map(dist(this.pos.x, this.pos.y, target.x, target.y), 0f, height, GLOBALS.GEN_B ,0.0001f),
+          180f);
       } else {
         fill(0);
       }
